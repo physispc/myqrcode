@@ -5,10 +5,10 @@ A single webpage for QRCode generation and scanning.
 Available on Github: https://github.com/physispc/myqrcode/
 
 # Usage
-- Hosted on Github Pages https://physispc.github.io/myqrcode/.
-- A custom search with an HTML parameter: https://physispc.github.io/myqrcode/?text=test
-- Used with webcache capabilities (a first visit to Github Pages is required) [tbd]
-- Saved locally for offline usage
+- [x] Hosted on Github Pages https://physispc.github.io/myqrcode/
+- [x] A custom search with an HTML parameter: https://physispc.github.io/myqrcode/?text=test
+- [ ] Used with webcache capabilities (a first visit to Github Pages is required) [tbd]
+- [x] Saved locally for offline usage
 
 # Dependencies
 - QRCode creation library: https://davidshimjs.github.io/qrcodejs/
