@@ -3,186 +3,288 @@
 <html lang="en">
 
 <head>
-<title>Mon generateur de QRCode (STE 2022)</title>
-<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGVSURBVDiNddM/a1VBEAXw3wYVBEnUwuQTSLBSEMFn4bOzCBoFIZWWgljEfIIUlkIsRJ6dpFKEkMI6/sFGEV7snmARUDEKQooYLQJjsXPNhfccGO7M7Lmzs2fPQozw2YiARbzMeHYUdp9qd7Ce8XMopdzHF8zbs1+YyfgklsYyWccq9mO3BTiEnVJKL2u7iVltNmwmgGvot/I1bOMcDrfq/cT+s0jgVnrkeY/i3ggOGtx2w8EVw/YWKziPV63aMDa7L+M2zmCQfgnT+R1ERINdyPXliFDQS0IOYgKb2XsK73PUFxFRSikLOIKvGMeJMdzMjp9xDD8joocuTuMHnpZS5jCJgj/J0Q25YyfHu4CNjFdwF1OZb6Kj6mKj8ZLsDpEYEd9KKYvoRkR3BIYcJ1SFNQKaUNmewwd8xMNcu5pTdNQrXmmENKMqrI9PLRIHeGNPzpfxHQ9wAJONlOEZTrXyx6pgbmE6Ip7kz4Hj6hU/koV5lfWuem3t17iF17k2nrUdqYPmCEv/I0nVyEX8xtmsvYuI6/AX2+Wh45jNpXMAAAAASUVORK5CYII=">
-<style>
-	#qrcode {
-	  width:160px;
-	  height:160px;
-	  margin-top:15px;
-	}
+	<title>My QRCode</title>
+	<!-- use https://yoksel.github.io/url-encoder/ to encode a svg file -->
+	<link rel="icon" type="image/svg+xml"
+		href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M3 11h2v2H3zm8-6h2v4h-2zm-2 6h4v4h-2v-2H9zm6 0h2v2h2v-2h2v2h-2v2h2v4h-2v2h-2v-2h-4v2h-2v-4h4v-2h2v-2h-2zm4 8v-4h-2v4zM15 3h6v6h-6zm2 2v2h2V5zM3 3h6v6H3zm2 2v2h2V5zM3 15h6v6H3zm2 2v2h2v-2z'/%3E%3C/svg%3E">
+	<style>
+		#qrcode {
+			margin-top: 15px;
+		}
 
+		/* Set height of body and the document to 100% */
+		body,
+		html {
+			height: 100%;
+			margin: 0;
+			font-family: Arial;
+		}
 
-	.split {
-	  height: 100%;
-	  width: 50%;
-	  position: fixed;
-	  z-index: 1;
-	  top: 0;
-	  overflow-x: hidden;
-	  padding-top: 20px;
-	}
+		/* Style tab links */
+		.tablink {
+			background-color: lightgray;
+			color: darkslategray;
+			float: left;
+			border: none;
+			outline: none;
+			cursor: pointer;
+			padding: 14px 16px;
+			font-size: 17px;
+			font-weight: bold;
+			width: 33.33%;
+		}
 
-	.left {
-	  left: 0;
-	}
+		.tablink:hover {
+			background-color: silver;
+		}
 
-	.right {
-		right: 0;
-		background-color: LightGray;
-	}
+		/* Style the tab content (and add height:100% for full page content) */
+		.tabcontent {
+			color: darkslategray;
+			display: none;
+			padding: 100px 20px;
+			height: 100%;
+		}
 
-</style>
+		#text2qrcode {
+			background-color: ghostwhite;
+		}
 
-<script src="jquery.min.js"></script>
-<script src="qrcode.min.js"></script>
-<script src="jsQR.js"></script>
+		#qrcode2text {
+			background-color: whitesmoke;
+		}
+
+		#about {
+			background-color: mintcream;
+		}
+	</style>
+
+	<!-- for qrcode generation-->
+	<script src="jquery.min.js"></script>
+	<script src="qrcode.min.js"></script>
+
+	<!-- for qrcode scan-->
+	<script src="jsQR.js"></script>
 </head>
 
 <body>
 
-
-<div class="split left">
-	<!-- Text to QRCode -->
-	<h1>Text &rarr; QRCode</h1>
-	<p>
-		Code : <a href="https://davidshimjs.github.io/qrcodejs/">https://davidshimjs.github.io/qrcodejs/</a>
-	</p>
-		
-	<input id="text" type="text" value="" style="width:90%"><br>
-	<div id="qrcode"></div>
-</div>
-
-
-<div class="split right">
-	<!-- QRCode to text -->
-	<h1>QRCode &rarr; text</h1>
-	<p>
-		Code : <a href="https://github.com/cozmo/jsQR">https://github.com/cozmo/jsQR</a>
-	</p>
-	
-	<input id="outputData" type="text" value="No QR code detected." style="width:90%">
-	<button onclick="copy2clipboard()">Copy text</button>
-	<br>
-	
-	<div id="loadingMessage">Click <a href="#" onClick="requestCamera()">here</a> to grant camera access</div>
-	<canvas id="canvas" hidden></canvas>
-
-</div>
+	<!-- Tab bar
+	 SVG icons from https://icon-sets.iconify.design/mdi/
+	  -->
+	<button class="tablink" onclick="openPage('text2qrcode', this, 'ghostwhite')" id="defaultOpen">
+		<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+			<path fill="currentColor"
+				d="M5 5h2v2H5zM1 1h10v10H1zm2 2v6h6V3zm2 14h2v2H5zm-4-4h10v10H1zm2 2v6h6v-6zm10-2h4v2h2v-2h4v2h-4v2h4v6h-4v-2h-4v2h-2v-2h2v-2h-2zm8 8v-2h-2v2zm-2-4h-2v-2h-2v4h4zM17 2v3h-3v2h3v3h2V7h3V5h-3V2Z" />
+		</svg> </button>
+	<button class="tablink" onclick="openPage('qrcode2text', this, 'whitesmoke')">
+		<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+			<path fill="currentColor"
+				d="M4 4h6v6H4zm16 0v6h-6V4zm-6 11h2v-2h-2v-2h2v2h2v-2h2v2h-2v2h2v3h-2v2h-2v-2h-3v2h-2v-4h3zm2 0v3h2v-3zM4 20v-6h6v6zM6 6v2h2V6zm10 0v2h2V6zM6 16v2h2v-2zm-2-5h2v2H4zm5 0h4v4h-2v-2H9zm2-5h2v4h-2zM2 2v4H0V2a2 2 0 0 1 2-2h4v2zm20-2a2 2 0 0 1 2 2v4h-2V2h-4V0zM2 18v4h4v2H2a2 2 0 0 1-2-2v-4zm20 4v-4h2v4a2 2 0 0 1-2 2h-4v-2z" />
+		</svg>
+	</button>
+	<button class="tablink" onclick="openPage('about', this, 'mintcream')">
+		<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+			<path fill="currentColor"
+				d="M13 9h-2V7h2m0 10h-2v-6h2m-1-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2" />
+		</svg>
+	</button>
 
 
-
-<script>
-/////////////////
-// Text to QRCode
-/////////////////
-var qrcode = new QRCode("qrcode");
-
-function makeCode () {    
-  var elText = document.getElementById("text");
-  
-  if (!elText.value) {
-    alert("Input a text");
-    elText.focus();
-    return;
-  }
-  
-  qrcode.makeCode(elText.value);
-}
-
-function processArgs() {
-    var parameter = location.search;
-
-	var temp = parameter.split("=");
-	var text = unescape(temp[1]);
-	
-	document.getElementById("text").value = text;
-}
-
-processArgs();
-makeCode();
+	<!-- Tab content -->
+	<div id="text2qrcode" class="tabcontent">
+		<input id="text" type="text" value="type a text to convert here" style="width:90%"><br>
+		<div id="qrcode"></div>
+	</div>
 
 
-// select all text, so that user can type directly
-document.getElementById("text").select();
+	<div id="qrcode2text" class="tabcontent">
+		<input id="outputData" type="text" value="No QR code detected." style="width:90%">
+		<button onclick="copy2clipboard()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+				viewBox="0 0 24 24">
+				<path fill="currentColor"
+					d="M4 7v14h14v2H4c-1.1 0-2-.9-2-2V7zm16-4c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h3.18C11.6 1.84 12.7 1 14 1s2.4.84 2.82 2zm-6 0c-.55 0-1 .45-1 1s.45 1 1 1s1-.45 1-1s-.45-1-1-1m-4 4V5H8v12h12V5h-2v2m-3 8h-5v-2h5m3-2h-8V9h8z" />
+			</svg></button>
+		<br>
 
-$("#text").
-  on("blur", function () {
-    makeCode();
-  }).
-  on("keydown", function (e) {
-    if (e.keyCode == 13) {
-      makeCode();
-    }
-  });
+		<div id="loadingMessage">Click <a href="#" onClick="requestCamera()">here</a> to grant camera access</div>
+		<canvas id="canvas" hidden></canvas>
+	</div>
+
+	<div id="about" class="tabcontent">
+		<h1>
+			My QRCode (2024)
+		</h1>
+		<p>
+			A single webpage for QRCode generation and scanning.
+		</p>
+		<p>
+			Available on Github: <a href="https://github.com/physispc/myqrcode/">https://github.com/physispc/myqrcode/</a>
+		</p>
+		<h1>
+			Usage
+		</h1>
+		<ul>
+			<li>
+				Hosted on Github Pages <a
+					href="https://physispc.github.io/myqrcode/">https://physispc.github.io/myqrcode/</a>.			</li>
+			<li>
+				A custom search with an HTML parameter: <a
+				href="https://physispc.github.io/myqrcode/?text=test">https://physispc.github.io/myqrcode/?text=test</a>
+			</li>
+			<li>
+				Used with webcache capabilities (a first visit to Github Pages is required)
+			</li>
+			<li>
+				Saved locally for offline usage
+			</li>
+		</ul>
+		<p>
+		</p>
+		<h1>
+			Dependencies
+		</h1>
+		<p>
+			QRCode creation library: <a
+				href="https://davidshimjs.github.io/qrcodejs/">https://davidshimjs.github.io/qrcodejs/</a>
+		</p>
+		<p>
+			QRCode scan library: <a href="https://github.com/cozmo/jsQR">https://github.com/cozmo/jsQR</a>
+		</p>
+	</div>
+
+	<script>
+
+		// switch tab
+		function openPage(pageName, elmnt, color) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablink");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].style.backgroundColor = "";
+			}
+			document.getElementById(pageName).style.display = "block";
+			elmnt.style.backgroundColor = color;
+		}
+
+		// Get the element with id="defaultOpen" and click on it
+		document.getElementById("defaultOpen").click();
+
+		/////////////////
+		// Text to QRCode
+		/////////////////
+		var qrcode = new QRCode("qrcode");
+
+		function makeCode() {
+			var elText = document.getElementById("text");
+
+			if (!elText.value) {
+				alert("Input a text");
+				elText.focus();
+				return;
+			}
+
+			qrcode.makeCode(elText.value);
+		}
+
+		function processArgs() {
+			var parameter = location.search;
+
+			var temp = parameter.split("=");
+			var text = unescape(temp[1]);
+
+			if (text != "undefined") {
+				document.getElementById("text").value = text;
+			}
+		}
+
+		processArgs();
+		makeCode();
+
+
+		// select all text, so that user can type directly
+		document.getElementById("text").select();
+
+		$("#text").
+			on("blur", function () {
+				makeCode();
+			}).
+			on("keydown", function (e) {
+				if (e.keyCode == 13) {
+					makeCode();
+				}
+			});
 
 
 
 
-/////////////////
-// QRCode to text
-/////////////////
-var video = document.createElement("video");
-var canvasElement = document.getElementById("canvas");
-var canvas = canvasElement.getContext("2d");
-var loadingMessage = document.getElementById("loadingMessage");
-var outputData = document.getElementById("outputData");
+		/////////////////
+		// QRCode to text
+		/////////////////
+		var video = document.createElement("video");
+		var canvasElement = document.getElementById("canvas");
+		var canvas = canvasElement.getContext("2d");
+		var loadingMessage = document.getElementById("loadingMessage");
+		var outputData = document.getElementById("outputData");
 
-function drawLine(begin, end, color) {
-  canvas.beginPath();
-  canvas.moveTo(begin.x, begin.y);
-  canvas.lineTo(end.x, end.y);
-  canvas.lineWidth = 4;
-  canvas.strokeStyle = color;
-  canvas.stroke();
-}
+		function drawLine(begin, end, color) {
+			canvas.beginPath();
+			canvas.moveTo(begin.x, begin.y);
+			canvas.lineTo(end.x, end.y);
+			canvas.lineWidth = 4;
+			canvas.strokeStyle = color;
+			canvas.stroke();
+		}
 
-// Use facingMode: environment to attemt to get the front camera on phones
-function requestCamera() {
-	navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-	  video.srcObject = stream;
-	  video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-	  video.play();
-	  requestAnimationFrame(tick);
-	});
-}
+		// Use facingMode: environment to attemt to get the front camera on phones
+		function requestCamera() {
+			navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
+				video.srcObject = stream;
+				video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+				video.play();
+				requestAnimationFrame(tick);
+			});
+		}
 
-function tick() {
-  loadingMessage.innerText = "Loading video..."
-  if (video.readyState === video.HAVE_ENOUGH_DATA) {
-	loadingMessage.hidden = true;
-	canvasElement.hidden = false;
+		function tick() {
+			loadingMessage.innerText = "Loading video..."
+			if (video.readyState === video.HAVE_ENOUGH_DATA) {
+				loadingMessage.hidden = true;
+				canvasElement.hidden = false;
 
-	canvasElement.height = video.videoHeight;
-	canvasElement.width = video.videoWidth;
-	canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-	var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-	var code = jsQR(imageData.data, imageData.width, imageData.height, {
-	  inversionAttempts: "dontInvert",
-	});
-	if (code) {
-	  drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-	  drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-	  drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-	  drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-	  outputData.value = code.data;
-	}
-  }
-  requestAnimationFrame(tick);
-}
+				canvasElement.height = video.videoHeight;
+				canvasElement.width = video.videoWidth;
+				canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+				var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+				var code = jsQR(imageData.data, imageData.width, imageData.height, {
+					inversionAttempts: "dontInvert",
+				});
+				if (code) {
+					drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+					drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+					drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+					outputData.value = code.data;
+				}
+			}
+			requestAnimationFrame(tick);
+		}
 
 
-function copy2clipboard() {
-  // Select the text field
-  outputData.select();
-  outputData.setSelectionRange(0, 99999); // For mobile devices
+		function copy2clipboard() {
+			// Select the text field
+			outputData.select();
+			outputData.setSelectionRange(0, 99999); // For mobile devices
 
-   // Copy the text inside the text field
-  navigator.clipboard.writeText(outputData.value);
+			// Copy the text inside the text field
+			navigator.clipboard.writeText(outputData.value);
 
-}
+		}
 
-</script>
+	</script>
 
 
 </body>
