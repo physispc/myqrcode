@@ -10,6 +10,10 @@ Available on Github: https://github.com/physispc/myqrcode/
 - [ ] Used with webcache capabilities (a first visit to Github Pages is required) [tbd]
 - [x] Saved locally for offline usage
 
+# Todo
+[ ] Mobile view
+[ ] Webcache
+
 # Dependencies
 - QRCode creation library: https://davidshimjs.github.io/qrcodejs/
 - QRCode scan library: https://github.com/cozmo/jsQR
